@@ -76,7 +76,6 @@ function validateToken(authToken) {
         message: 'USER_INVALID_AUTH'
       });
     }
-    var userId = authPayload.userInfo;
-
+    return resolve();
   });
 }

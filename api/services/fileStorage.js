@@ -81,7 +81,7 @@ function getAllUsers(dir, adminEmail){
 
         return Q.all(nonAdminUserDetails)
           .then(function(nonAdminUserDetails){
-            
+
             return resolve(nonAdminUserDetails);
           });
       })
