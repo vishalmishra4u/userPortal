@@ -15,15 +15,15 @@
 
 module.exports.datastores = {
 
-  localDiskDb: {
-    adapter: 'sails-disk'
-  },
-
-  MongodbServer: {
-    adapter: 'sails-mongo',
-    host: 'localhost',
-    port: 27017,
-    database: 'user_portal'
-  }
+  // localDiskDb: {
+  //   adapter: 'sails-disk'
+  // },
+  //
+  // MongodbServer: {
+  //   adapter: 'sails-mongo',
+  //   host: 'localhost',
+  //   port: 27017,
+  //   database: 'user_portal'
+  // }
 
 };

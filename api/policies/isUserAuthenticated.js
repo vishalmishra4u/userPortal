@@ -1,11 +1,7 @@
-/**
- * Created by raviteja on 02/11/15.
- */
 'use strict';
 
 var _ = require('lodash');
 
-// policies/canWrite.js
 module.exports = function(req, res, next) {
   // check if the request has header
   // if header is present; check the token validity

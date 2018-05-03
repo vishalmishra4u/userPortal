@@ -14,7 +14,8 @@ module.exports = {
 
   attributes: {
     id :{
-      type : 'string'
+      type : 'string',
+      required : true
     },
     firstName: {
       type: 'string'
@@ -49,53 +50,43 @@ module.exports = {
   registerUser : registerUser,
   encryptPassword : encryptPassword,
   generateSalt : generateSalt,
-  getUser : getUser
+  getUser : getUser,
+  removeUser : removeUser
 };
 
 
 function registerUser(user){
   return Q.promise(function(resolve, reject) {
 
-    User
-      .findOne({email : user.email})
-      .then(function(existingUser){
-        if(!existingUser || existingUser == 'undefined'){
-          var newUser = {
-            firstName : user.firstName,
-            lastName : user.lastName,
-            dob : user.dob,
-            email : user.email,
-            password : null,
-            age : user.age,
-            occupation : user.occupation,
-            salt : null
-          };
+    var newUser = {
+      firstName : user.firstName,
+      lastName : user.lastName,
+      id : generateSalt(),
+      dob : user.dob,
+      email : user.email,
+      password : null,
+      age : user.age,
+      occupation : user.occupation,
+      salt : null,
+      isAdmin : false
+    };
 
-          user.salt = generateSalt();
+    newUser.salt = generateSalt();
 
-          encryptPassword(user.password, user.salt)
-            .then(function(encryptedPassword){
-              user.password = encryptedPassword;
-              User
-                .create(user)
-                .then(function(userRegistered){
-                  return resolve(userRegistered);
-                })
-                .catch(function(error){
-                  sails.log.error('User#registerUser :: error : ', error);
-                  return reject(error);
-                });
-            })
-            .catch(function(error){
-              sails.log.error('User#registerUser :: error : ', error);
-              return reject(error);
-            });
-        }else{
-          return reject({
-            code : 400,
-            message : 'USER_ALREADY_EXISTS'
-          });
-        }
+    encryptPassword(user.password, newUser.salt)
+      .then(function(encryptedPassword){
+      newUser.password = encryptedPassword;
+
+      //Send the data and call createData of fileStorgae service to store data
+      fileStorage
+        .createData('userData',user.email,newUser)
+        .then(function(userRegistered){
+          return resolve();
+        })
+        .catch(function(error){
+          sails.log.error('User#registerUser :: error : ', error);
+          return reject(error);
+        });
       })
       .catch(function(error){
         sails.log.error('User#registerUser :: error : ', error);
@@ -122,10 +113,7 @@ function generateSalt() {
 
 function getUser(loginDetails){
   return Q.promise(function(resolve, reject) {
-    User
-      .findOne({
-        email : loginDetails.email
-      })
+    fileStorage.readData('userData',loginDetails.email)
       .then(function(user){
         if(!user || user == 'undefined'){
           return reject({
@@ -146,7 +134,7 @@ function getUser(loginDetails){
               };
 
               if(user.isAdmin === true){
-                getAllUsers()
+                getAllUsers(user.email)
                   .then(function(allOtherUsers){
                     var responseObject = {
                       userDetails : userDetails,
@@ -159,6 +147,8 @@ function getUser(loginDetails){
                     sails.log.error('User#getUser :: error : ', error);
                     return reject(error);
                   });
+              }else{
+                return resolve(userDetails);
               }
             }
             else{
@@ -180,10 +170,9 @@ function getUser(loginDetails){
   });
 }
 
-function getAllUsers(){
+function getAllUsers(adminEmail){
   return Q.promise(function(resolve, reject) {
-    User
-      .find()
+    fileStorage.getAllUsers('userData', adminEmail)
       .then(function(allUsers){
         var formattedUsers = [];
         _.forEach(allUsers, function(user){
@@ -202,6 +191,20 @@ function getAllUsers(){
       })
       .catch(function(){
         sails.log.error('User#getAllUsers :: error : ', error);
+        return reject(error);
+      });
+  });
+}
+
+function removeUser(userEmail){
+  return Q.promise(function(resolve, reject) {
+    fileStorage
+      .deleteData('userData',userEmail)
+      .then(function(){
+        return resolve();
+      })
+      .catch(function(error){
+        sails.log.error('User#removeUser :: error : ', error);
         return reject(error);
       });
   });

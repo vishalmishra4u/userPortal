@@ -17,6 +17,10 @@ module.exports.routes = {
   'GET /user/login': {
     controller: 'UserController',
     action : 'login'
+  },
+  'DELETE /user/deleteUser': {
+    controller: 'UserController',
+    action : 'deleteUser'
   }
 
 };

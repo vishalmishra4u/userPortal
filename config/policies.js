@@ -11,6 +11,7 @@
 module.exports.policies = {
   UserController : {
     'signUp': ['userValidation/registerValidation'],
-    'login': ['userValidation/loginValidation']
+    'login': ['userValidation/loginValidation'],
+    'deleteUser': ['isUserAuthenticated','userValidation/userDeleteValidation','isAdmin']
   }
 };

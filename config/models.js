@@ -14,14 +14,14 @@
  */
 
 module.exports.models = {
-
-  connection : 'MongodbServer',
-  migrate: 'alter',
-
-  dataEncryptionKeys: {
-    default: 'eRNxyH6hUjR6UmtibqSCCzexMpFps7EpGtjUaWjJ32o='
-  },
-
-  cascadeOnDestroy: true
+  //
+  // connection : 'MongodbServer',
+  migrate: 'alter'
+  //
+  // dataEncryptionKeys: {
+  //   default: 'eRNxyH6hUjR6UmtibqSCCzexMpFps7EpGtjUaWjJ32o='
+  // },
+  //
+  // cascadeOnDestroy: true
 
 };

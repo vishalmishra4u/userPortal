@@ -78,17 +78,5 @@ function validateToken(authToken) {
     }
     var userId = authPayload.userInfo;
 
-    // get user for id
-    User
-      .getUserForId(userId)
-      .then(resolve)
-      .catch(function(err) {
-        sails.log.error('AuthenticationService#validateToken :: Error :: ', err);
-        // throw a 401 error
-        return reject({
-          code: 401,
-          message: 'USER_INVALID_AUTH'
-        });
-      });
   });
 }

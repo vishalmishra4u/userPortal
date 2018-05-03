@@ -7,7 +7,8 @@
 
 module.exports = {
   signUp : signUpAction,
-  login : loginAction
+  login : loginAction,
+  deleteUser : deleteUserAction
 };
 
 function signUpAction(req, res){
@@ -20,9 +21,9 @@ function signUpAction(req, res){
 
   User
     .registerUser(req.form)
-    .then(function(userDetails){
+    .then(function(){
 
-      return res.Success(userDetails);
+      return res.Success();
     })
     .catch(function(error){
       sails.log.error('UserController#signUpAction ::error :', error);
@@ -51,4 +52,17 @@ function loginAction(req, res){
        sails.log.error('UserController#loginAction ::error :', error);
        return res.badRequest();
      });
+}
+
+function deleteUserAction(req, res){
+  var deleteUserEmail = req.param('email');
+  User
+    .removeUser(deleteUserEmail)
+    .then(function(){
+      return res.Success();
+    })
+    .catch(function(error){
+      sails.log.error('UserController#deleteUserAction ::error :', error);
+      return res.badRequest();
+    });
 }
