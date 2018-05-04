@@ -42,26 +42,6 @@ module.exports = function(message) {
     envelope.error['message'] = defaultMessage;
     sails.log.error('@badRequest - Client Error - No Message');
   }
+  return res.json(envelope);
 
-
-  // If the user-agent wants JSON, always respond with JSON
-  if (req.wantsJSON) {
-    return res.jsonx(envelope);
-  } else {
-    return res.view('errorResponse', {
-      message: message
-    }, function(err, html) {
-      if (err) {
-        if (err.code === 'E_VIEW_FAILED') {
-          sails.log.error('@badRequest :: Could not locate view for error page');
-        }
-        // Otherwise, if this was a more serious error, log to the console with the details.
-        else {
-          sails.log.error('@badRequest :: When attempting to render error page view, an error occured (sending JSON instead).  Details: ', err);
-        }
-        return res.jsonx(envelope);
-      }
-      return res.send(html);
-    });
-  }
 };

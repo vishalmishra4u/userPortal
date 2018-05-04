@@ -13,7 +13,7 @@ module.exports = function(req, res, next) {
       if(userDetail.isAdmin === true){
         return next();
       }else{
-        return res.badRequest({
+        return res.handleError({
           code : 401,
           message : 'NOT_ADMIN'
         });
@@ -21,6 +21,6 @@ module.exports = function(req, res, next) {
     })
     .catch(function(error){
       sails.log.error('isAdmin :: Error :', error);
-      return res.badRequest(error);
+      return res.handleError(error);
     });
 };

@@ -75,7 +75,8 @@ function validateToken(authToken) {
         code: 401,
         message: 'USER_INVALID_AUTH'
       });
+    }else{
+      return resolve();
     }
-    return resolve();
   });
 }

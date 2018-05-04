@@ -51,7 +51,8 @@ module.exports = {
   encryptPassword : encryptPassword,
   generateSalt : generateSalt,
   getUser : getUser,
-  removeUser : removeUser
+  removeUser : removeUser,
+  updateUser : updateUser
 };
 
 
@@ -205,6 +206,36 @@ function removeUser(userEmail){
       })
       .catch(function(error){
         sails.log.error('User#removeUser :: error : ', error);
+        return reject(error);
+      });
+  });
+}
+
+function updateUser(userDetails){
+  return Q.promise(function(resolve, reject) {
+    fileStorage
+      .readData('userData', userDetails.email)
+      .then(function(userData){
+
+        userData.firstName = userDetails.firstName || userData.firstName ;
+        userData.lastName = userDetails.lastName || userData.lastName ;
+        userData.age = userDetails.age || userData.age ;
+        userData.dob = userDetails.dob || userData.dob ;
+        userData.occupation = userDetails.occupation || userData.occupation ;
+
+        fileStorage
+          .updateData('userData', userDetails.email, userData)
+          .then(function(){
+
+            return resolve();
+          })
+          .catch(function(error){
+            sails.log.error('User#updateUser :: error : ', error);
+            return reject(error);
+          });
+      })
+      .catch(function(error){
+        sails.log.error('User#updateUser :: error : ', error);
         return reject(error);
       });
   });

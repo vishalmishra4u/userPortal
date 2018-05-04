@@ -21,6 +21,10 @@ module.exports.routes = {
   'DELETE /user/deleteUser': {
     controller: 'UserController',
     action : 'deleteUser'
+  },
+  'PUT /user/update': {
+    controller: 'UserController',
+    action : 'updateUser'
   }
 
 };

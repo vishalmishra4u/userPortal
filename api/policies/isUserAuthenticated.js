@@ -20,13 +20,12 @@ module.exports = function(req, res, next) {
   AuthenticationService
     .validateToken(authToken)
     .then(function(user) {
-      
+
       return next();
     }, function(err) {
       sails.log.error('#IsUserAuthenticated :: Error while validating the ' +
         'token :: ', err);
 
-      LoggingService.logErrorInfo(req, 'User Authentication', 'IsUserAuthenticated','User Authentication Failure - Invalid Token');
-      return res.badRequest(err);
+      return res.badRequest();
     });
 };
